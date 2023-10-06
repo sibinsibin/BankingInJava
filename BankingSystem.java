@@ -6,15 +6,15 @@ import java.util.Map;
 import java.util.Scanner;
 
 class Bank {
-    private static Map<Integer, Double> accounts;   //Hashmap method including accountNumber and initial balance and amount
-    private static Map<Integer, String> userNames;  //hashmap method including accountNumber and username.
+    private static Map<Long, Double> accounts;   //Hashmap method including accountNumber and initial balance and amount
+    private static Map<Long, String> userNames;  //hashmap method including accountNumber and username.
 
     public Bank() {
         accounts = new HashMap<>();
         userNames = new HashMap<>();
     }
 
-    public void createAccount(Integer accountNumber, String userName, double initialBalance) {
+    public void createAccount(Long accountNumber, String userName, double initialBalance) {
 
         accounts.put(accountNumber, initialBalance);
         userNames.put(accountNumber, userName);
@@ -23,11 +23,16 @@ class Bank {
         System.out.println("\n\tWelcome " + userName + "!\n");
         System.out.println("Your Account number is: " + accountNumber);
         System.out.println("Initial Balance₹: " + initialBalance);
+        System.out.println("\n\t\t\t\tNOTIFICATION");
+        System.out.println("\t\t\t\t------------\n");
+        System.out.println("Instructions to follow:\n");
+        System.out.println("Caution!: Your Account is your Responsibility use it with care!!");
+        System.out.println("Warning!: Don't misuse your account which results in problems.");
 
 
     }
 
-    public void deposit(Integer accountNumber, double amount) {
+    public void deposit(Long accountNumber, double amount) {
         if (accounts.containsKey(accountNumber)) {
 
             double currentBalance = accounts.get(accountNumber);
@@ -43,7 +48,7 @@ class Bank {
         }
     }
 
-    public void withdraw(Integer accountNumber, double amount) {
+    public void withdraw(Long accountNumber, double amount) {
         if (accounts.containsKey(accountNumber)) {
             double currentBalance = accounts.get(accountNumber);
             if (currentBalance >= amount) {
@@ -64,7 +69,7 @@ class Bank {
         }
     }
 
-    public void checkBalance(Integer accountNumber) {
+    public void checkBalance(Long accountNumber) {
         if (accounts.containsKey(accountNumber)) {
             double currentBalance = accounts.get(accountNumber);
             String userName = userNames.get(accountNumber);
@@ -78,7 +83,7 @@ class Bank {
 
     }
 
-    public Map<Integer, Double> getAccounts() {
+    public Map<Long, Double> getAccounts() {
         return accounts;
 
     }
@@ -92,9 +97,9 @@ public class BankingSystem {
         try {
             Bank bank = new Bank();
 
-            Map<Integer, Double> accounts = bank.getAccounts();
+            Map<Long, Double> accounts = bank.getAccounts();
 
-            int accountNumber = 0;
+            long accountNumber = 0;
             boolean validAccount = false;
             Scanner scanner = new Scanner(System.in);
 
@@ -122,21 +127,32 @@ public class BankingSystem {
                         System.out.print("Enter your Father name: ");
                         String father = scanner.nextLine();
 
-                        System.out.print("Enter your Account Type: ");
-                        String type = scanner.nextLine();
+                        System.out.print("Enter your four digit PIN code: ");
+                        boolean Code = false;
+                        while (!Code) {
+                            String code = scanner.next();
+                            if (code.length() == 4) {
+                                System.out.println("\t\t\t\t\tCode set!\n");
+                                Code = true;
+
+                            } else {
+                                System.out.print("\nEnter four digit PIN Code:");
+                            }
+                        }
 
                         System.out.println("Enter Your Date of Birth");
-                        System.out.print("Enter Birth Date: ");
+                        System.out.print("1.Enter Birth Date: ");
 
                         int age = scanner.nextInt();
-                        System.out.print("Enter Birth Month: ");
+                        System.out.print("2.Enter Birth Month: ");
                         int month = scanner.nextInt();
 
-                        System.out.print("Enter Birth Year: ");
+                        System.out.print("3.Enter Birth Year: ");
                         int year = scanner.nextInt();
 
-                        Random random = new Random();
-                        accountNumber = 100000000 + random.nextInt(900000000); //creating a nine digit random number.
+                        do {
+                            accountNumber = 100000000000000L + new Random().nextLong() % 900000000000000L;  //Creates a fifteen digit random number
+                        } while (accountNumber <= 0);
 
                         System.out.print("Enter initial balance₹: ");
                         double initialBalance = scanner.nextDouble();
@@ -152,7 +168,7 @@ public class BankingSystem {
                         validAccount = false; // Flag to track if the account is valid
                         while (!validAccount) {
                             System.out.print("Enter account number: ");        //Asking the user to enter the correct account number
-                            accountNumber = scanner.nextInt();                           //if the user enters an account which is not
+                            accountNumber = scanner.nextLong();                           //if the user enters an account which is not
 
                             if (accounts.containsKey(accountNumber)) {                        //created yet it ask repeatedly until a correct account number is given
                                 validAccount = true;// Set the flag to true if the account exists
@@ -184,7 +200,7 @@ public class BankingSystem {
                         validAccount = false;                    //same method as mentioned above
                         while (!validAccount) {
                             System.out.print("Enter account number: ");
-                            accountNumber = scanner.nextInt();
+                            accountNumber = scanner.nextLong();
                             if (accounts.containsKey(accountNumber)) {
                                 validAccount = true;
                             } else if (accountNumber == 0) {
@@ -211,7 +227,7 @@ public class BankingSystem {
                         validAccount = false;
                         while (!validAccount) {                           //Same method as mentioned above
                             System.out.print("Enter account number: ");
-                            accountNumber = scanner.nextInt();
+                            accountNumber = scanner.nextLong();
                             if (accounts.containsKey(accountNumber)) {
                                 validAccount = true;
                             } else if (accountNumber == 0) {
@@ -231,7 +247,7 @@ public class BankingSystem {
                     case 5:
                         exit = true;             //passes the flag value to true which will stop the loop and prints the final statement
 
-                        System.out.println("\n\t\tThank you for using my banking system!!Come again.");
+                        System.out.println("\n\t\tThank you for using my banking System!!Come again.");
                         break;
                     default:
                         System.out.println(" __________________________________");
@@ -246,6 +262,7 @@ public class BankingSystem {
         } catch (
                 Exception e) {           //If any miss-value is gotten form the user the catch exception will print the statement
             System.out.println("\n!!! Invalid input ");
+
 
         }
     }
